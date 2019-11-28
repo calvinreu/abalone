@@ -3,6 +3,7 @@
 #include <SDL2/SDL_image.h>
 #include <vector>
 #include "../game dynamic/board.hpp"
+#include "../game dynamic/move_dynamic.hpp"
 #include "rect.hpp"
 
 extern tile* map[9];
@@ -29,7 +30,7 @@ private:
     split_texture ball;
 public:
 
-    void new_frame(std::vector<position> selectedBalls);
+    void new_frame(const position &selected, const byte &ammount, const direction &row_direction);
 
     graphic();
     ~graphic();

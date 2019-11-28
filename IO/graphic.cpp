@@ -1,6 +1,13 @@
 #include "graphic.hpp"
 #include <iostream>
 
+#ifndef DefBallIMG
+#define DefBallIMG "./IO/img/ball.png"
+#endif
+#ifndef DefBoardIMG
+#define DefBoardIMG "./IO/img/board.png"
+#endif
+
 graphic::graphic()
 {
     SDL_Init(SDL_INIT_VIDEO);
@@ -21,19 +28,19 @@ graphic::graphic()
         std::cout << "SDL_image could not be initialize! SDL Error: %s\n" << SDL_GetError() << std::endl;
 
     
-    ballS = IMG_Load("./IO/img/ball.png");
+    ballS = IMG_Load(DefBallIMG);
 
     if( ballS == NULL )
-        std::cout << "unable to load image: %s \n" << "IO/img/ball.png " << IMG_GetError() << std::endl;
+        std::cout << "unable to load image: %s \n" << DefBallIMG << IMG_GetError() << std::endl;
 
     board = IMG_Load("./IO/img/board.png");
 
     if( board == NULL )
-        std::cout << "unable to load image: %s \n" << "IO/img/board.png " << IMG_GetError() << std::endl;
+        std::cout << "unable to load image: %s \n" << DefBoardIMG << IMG_GetError() << std::endl;
 
     ball.LoadFromSurface(ballS, renderer);
 
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 200, 255);
 }
 
 graphic::~graphic()
@@ -49,11 +56,10 @@ graphic::~graphic()
     window = NULL;
     renderer = NULL;
 
-    SDL_Quit();
     IMG_Quit();
 }
 
-void graphic::new_frame(std::vector<position> selectedBalls)
+void graphic::new_frame(const position &selected, const byte &ammount, const direction &row_direction)
 {
     SDL_RenderClear(renderer);
 
@@ -84,7 +90,6 @@ void graphic::new_frame(std::vector<position> selectedBalls)
                 break;
             
             case player1:
-                std::cout << "player 1";
                 ball.RenderCopy(&white_ball, &destRect, renderer);
                 break;
             }
@@ -104,11 +109,14 @@ void graphic::new_frame(std::vector<position> selectedBalls)
         destRect.x += 100;
     }
 
-    for (auto i = selectedBalls.begin(); i < selectedBalls.end(); i++)
+    position tempTile = selected;
+
+    for (size_t i = 0; i < ammount; i++)
     {
-        destRect.x = (900-(modulus(layer - 4) * 100))/2;
-        destRect.y = 300 + (layer * 100);
+        destRect.x = ((900-((9 -(modulus(tempTile.y - 4))) * 100))/2) + (tempTile.x * 100);
+        destRect.y = 300 + (tempTile.y * 100);
         ball.RenderCopy(&selected_ball, &destRect, renderer);
+        set_field_index(tempTile, row_direction, 1);
     }
 
     SDL_RenderPresent(renderer);

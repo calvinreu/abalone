@@ -18,13 +18,6 @@ struct action
 
 bool move(const action &move_)
 {
-    if (move_.player == empty)//error handling
-    {
-        std::cout << "false move command" << std::endl;
-        return false;
-    }
-    
-
     if(move_.ballC > 2)
         return false;
 
@@ -32,7 +25,7 @@ bool move(const action &move_)
 
     if(move_.row_direction == move_.move_direction)
     {
-        get_field_index(currentTile, move_.move_direction, move_.ballC);
+        set_field_index(currentTile, move_.move_direction, (s_byte)move_.ballC + 1);
 
         if(!on_board(currentTile))
             return false;
@@ -55,7 +48,7 @@ bool move(const action &move_)
 
             while (true)
             {
-                get_field_index(enemyRow, move_.move_direction, 1);
+                set_field_index(enemyRow, move_.move_direction, 1);
 
                 if (map[enemyRow.y][enemyRow.x] == empty)
                 {
@@ -90,7 +83,7 @@ bool move(const action &move_)
                 {
                     enemyC++;
 
-                    if (enemyC == move_.ballC)
+                    if (enemyC == move_.ballC - 1)
                         return false;
                 }
             }
@@ -99,13 +92,13 @@ bool move(const action &move_)
     else
     {
         
-        get_field_index(currentTile, move_.move_direction, 1);
+        set_field_index(currentTile, move_.move_direction, 1);
 
         if(map[currentTile.y][currentTile.x] == empty)
         {
             for (size_t i = 1; i < move_.ballC; i++)
             {
-                get_field_index(currentTile, move_.row_direction, 1);
+                set_field_index(currentTile, move_.row_direction, 1);
 
                 if(map[currentTile.y][currentTile.x] != empty)
                     return false;
@@ -115,11 +108,11 @@ bool move(const action &move_)
             {
                 currentTile = {move_.xpos, move_.ypos};
 
-                get_field_index(currentTile, move_.move_direction, 1);
+                set_field_index(currentTile, move_.move_direction, 1);
 
                 for (size_t i = 1; i < move_.ballC; i++)
                 {
-                    get_field_index(currentTile, move_.row_direction, 1);
+                    set_field_index(currentTile, move_.row_direction, 1);
                     map[currentTile.y][currentTile.x] = player0;
                 }
             }
@@ -127,11 +120,11 @@ bool move(const action &move_)
             {
                 currentTile = {move_.xpos, move_.ypos};
 
-                get_field_index(currentTile, move_.move_direction, 1);
+                set_field_index(currentTile, move_.move_direction, 1);
 
                 for (size_t i = 1; i < move_.ballC; i++)
                 {
-                    get_field_index(currentTile, move_.row_direction, 1);
+                    set_field_index(currentTile, move_.row_direction, 1);
                     map[currentTile.y][currentTile.x] = player1;
                 }
             }        

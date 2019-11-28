@@ -5,6 +5,8 @@
 #include "../game dynamic/moves.hpp"
 #include "../IO/graphic.hpp"
 #include "../IO/graphic.cpp"
+#include "../IO/input.hpp"
+#include "../IO/input.cpp"
 
 graphic output;
 
@@ -12,11 +14,14 @@ int main()
 {
     SDL_Init(SDL_INIT_EVENTS);
 
+    output.new_frame(position{.x = 0, .y = 0}, 0, null);
 
-    output.new_frame(position{.x = -10, .y = -10}, 0, null);
-
-    bool b;
-    std::cin >> b;
+    for (size_t i = 0; i < 5; i++)
+    {
+        handle_input<player0>();
+        handle_input<player1>();
+    }
+    
 
     SDL_Quit();
 }
