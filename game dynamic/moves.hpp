@@ -8,88 +8,92 @@
 struct action
 {
     tile player;
-    s_byte xpos;
-    s_byte ypos;
-    byte ballC;//starts at 0
+    position _position;
+    byte ballC;
     direction row_direction;
     direction move_direction;
 };
 
-
-bool move(const action &move_)
+inline void straight_empty(const action &_move, const position &last_tile, map &board)
 {
-    if(move_.ballC > 2)
+    board[_move._position]  = empty;
+    board[last_tile] = _move.player;
+}
+
+inline bool straight_full(const action &_move, const position &startEnemyRow, map &board)
+{
+    byte enemyC = 2;
+    position currentTile = startEnemyRow;
+    while (true)
+    {
+        set_field_index(currentTile, _move.move_direction, 1);
+
+        if (board[startEnemyRow] == empty)
+        {
+            board[startEnemyRow] = _move.player;
+            board[_move._position] = empty;
+
+            if (_move.player == player0)
+            {
+                if (on_board(currentTile))
+                    board[currentTile] = player1;
+                else
+                    lostBallCPlayer1++;
+            }
+            else
+            {
+                if (on_board(currentTile))
+                    board[currentTile] = player0;
+                else
+                    lostBallCPlayer0++;
+            }
+
+            return true;
+        }
+        else if (board[currentTile] == _move.player)
+        {
+            return false;//cannot push own balls
+        }
+        else
+        {
+            enemyC++;
+            if (enemyC > _move.ballC)
+                return false;
+        }
+    }
+}
+
+bool move(const action &_move, map &board)
+{
+
+    if(_move.ballC > 3)// over free balls
         return false;
 
-    position currentTile = {move_.xpos, move_.ypos};
+    position currentTile = _move._position;
 
-    if(move_.row_direction == move_.move_direction)
+    if(_move.row_direction == _move.move_direction)
     {
-        set_field_index(currentTile, move_.move_direction, (s_byte)move_.ballC + 1);
+        //straight moves
+        set_field_index(currentTile, _move.move_direction, (s_byte)_move.ballC);
 
         if(!on_board(currentTile))
             return false;
 
-        if (map[currentTile.y][currentTile.x] == empty)
+        if (board[currentTile] == empty)
         {
-            map[move_.ypos][move_.xpos] = empty;
-            map[currentTile.y][currentTile.x] = move_.player;
-
+            straight_empty(_move, currentTile, board);
             return true;
         }
-        else if (map[currentTile.y][currentTile.x] == move_.player)
+        else if (board[currentTile] == _move.player)
         {
-            return false;
+            return false;//cannot push own balls
         }
         else
         {
-            byte enemyC = 0;
-            position enemyRow = currentTile;
-
-            while (true)
-            {
-                set_field_index(enemyRow, move_.move_direction, 1);
-
-                if (map[enemyRow.y][enemyRow.x] == empty)
-                {
-                    if (move_.player == player0){
-                        map[currentTile.y][currentTile.x] = player0;
-                        map[move_.ypos][move_.xpos] = empty;
-
-                        if (on_board(enemyRow))
-                            map[enemyRow.y][enemyRow.x] = player1;
-                        else
-                            lostBallCPlayer1++;
-                    }
-                    else
-                    {
-                        map[currentTile.y][currentTile.x] = player1;
-                        map[move_.ypos][move_.xpos] = empty;
-
-                        if (on_board(enemyRow))
-                            map[enemyRow.y][enemyRow.x] = player0;
-                        else
-                            lostBallCPlayer0++;
-                    }
-
-                    return true;
-                    
-                }
-                else if (map[enemyRow.y][enemyRow.x] == move_.player)
-                {
-                    return false;
-                }
-                else
-                {
-                    enemyC++;
-
-                    if (enemyC == move_.ballC - 1)
-                        return false;
-                }
-            }
+            return straight_full(_move, currentTile, board);
         }
     }
-    else
+    /*else
     {
         
         set_field_index(currentTile, move_.move_direction, 1);
@@ -104,37 +108,20 @@ bool move(const action &move_)
                     return false;
             }
 
-            if (move_.player == player0)
+            currentTile = {move_.xpos, move_.ypos};
+            set_field_index(currentTile, move_.move_direction, 1);
+            for (size_t i = 1; i < move_.ballC; i++)
             {
-                currentTile = {move_.xpos, move_.ypos};
-
-                set_field_index(currentTile, move_.move_direction, 1);
-
-                for (size_t i = 1; i < move_.ballC; i++)
-                {
-                    set_field_index(currentTile, move_.row_direction, 1);
-                    map[currentTile.y][currentTile.x] = player0;
-                }
-            }
-            else
-            {
-                currentTile = {move_.xpos, move_.ypos};
-
-                set_field_index(currentTile, move_.move_direction, 1);
-
-                for (size_t i = 1; i < move_.ballC; i++)
-                {
-                    set_field_index(currentTile, move_.row_direction, 1);
-                    map[currentTile.y][currentTile.x] = player1;
-                }
-            }        
+                set_field_index(currentTile, move_.row_direction, 1);
+                map[currentTile.y][currentTile.x] = move_.player;
+            }     
         }
         else
         {
             return false;
         } 
-    }
+    }*/
 
     std::cout << "movement error" << std::endl;
-    return false;
+    return false; 
 }

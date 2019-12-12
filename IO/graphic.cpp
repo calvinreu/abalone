@@ -33,9 +33,9 @@ graphic::graphic()
     if( ballS == NULL )
         std::cout << "unable to load image: %s \n" << DefBallIMG << IMG_GetError() << std::endl;
 
-    board = IMG_Load("./IO/img/board.png");
+    boardS = IMG_Load("./IO/img/board.png");
 
-    if( board == NULL )
+    if( boardS == NULL )
         std::cout << "unable to load image: %s \n" << DefBoardIMG << IMG_GetError() << std::endl;
 
     ball.LoadFromSurface(ballS, renderer);
@@ -49,7 +49,7 @@ graphic::~graphic()
     SDL_DestroyRenderer(renderer);
 
     SDL_FreeSurface(ballS);
-    SDL_FreeSurface(board);
+    SDL_FreeSurface(boardS);
 
     ball.free();
 
@@ -59,7 +59,7 @@ graphic::~graphic()
     IMG_Quit();
 }
 
-void graphic::new_frame(const position &selected, const byte &ammount, const direction &row_direction)
+void graphic::new_frame(const position &selected, const byte &ammount, const direction &row_direction, map &board)
 {
     SDL_RenderClear(renderer);
 
@@ -76,7 +76,7 @@ void graphic::new_frame(const position &selected, const byte &ammount, const dir
     
     destRect.y = 300;
 
-    for (auto i = map; i < map + 9; i++)
+    for (auto i = board.begin(); i < board.end(); i++)
     {
         layerLenght = 9 - modulus(layer - 4);
         destRect.x = (900-(layerLenght * 100))/2;

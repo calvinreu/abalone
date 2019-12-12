@@ -6,8 +6,6 @@
 #include "../game dynamic/move_dynamic.hpp"
 #include "rect.hpp"
 
-extern tile* map[9];
-
 class split_texture
 {
 private:
@@ -25,12 +23,12 @@ private:
     SDL_Window* window     = NULL;
 
     SDL_Surface* ballS = NULL;
-    SDL_Surface* board = NULL;
+    SDL_Surface* boardS = NULL;
 
     split_texture ball;
 public:
 
-    void new_frame(const position &selected, const byte &ammount, const direction &row_direction);
+    void new_frame(const position &selected, const byte &ammount, const direction &row_direction, map &board);
 
     graphic();
     ~graphic();

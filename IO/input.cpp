@@ -1,9 +1,10 @@
 #include "input.hpp"
 
 extern graphic output;
+extern bool quit;
 
 template<const tile player>
-void mouse_event(position &selected, byte &ammount, direction &move_direction, direction &row_direction, const pair<int> &cursorPosition)
+void mouse_event(position &selected, byte &ammount, direction &move_direction, direction &row_direction, const pair<int> &cursorPosition, map &board)
 {
     position cursorOnBoard;
 
@@ -15,7 +16,7 @@ void mouse_event(position &selected, byte &ammount, direction &move_direction, d
         if (!on_board(cursorOnBoard))
             return;
 
-        if(map[cursorOnBoard.y][cursorOnBoard.x] == player)
+        if(board[cursorOnBoard] == player)
         {
             selected = cursorOnBoard;
             ammount++;        
@@ -38,7 +39,7 @@ void mouse_event(position &selected, byte &ammount, direction &move_direction, d
         {
             if(cursorOnBoard == get_field_index(selected, row_direction, ammount))
             {
-                if (map[cursorOnBoard.y][cursorOnBoard.x] == player)
+                if (board[cursorOnBoard] == player)
                     ammount++;
                 else
                     move_direction = row_direction;
@@ -47,7 +48,7 @@ void mouse_event(position &selected, byte &ammount, direction &move_direction, d
             {
                 if(get_field_index(selected, row_direction, -1) == cursorOnBoard)
                 {
-                    if(map[cursorOnBoard.y][cursorOnBoard.x] == player)
+                    if(board[cursorOnBoard] == player)
                     {
                         selected = cursorOnBoard;
                         ammount++;        
@@ -72,8 +73,7 @@ action get_move(const position &selected, const byte &ammount, const direction &
     action retVal;
 
     retVal.player         = player        ;
-    retVal.xpos           = selected.x    ;
-    retVal.ypos           = selected.y    ;
+    retVal._position      = selected      ;
     retVal.ballC          = ammount       ;
     retVal.row_direction  = row_direction ;
     retVal.move_direction = move_direction;
@@ -82,7 +82,7 @@ action get_move(const position &selected, const byte &ammount, const direction &
 }
 
 template<const tile player>
-void handle_input()
+bool handle_input(map &board)
 {
     position  selected            ; 
     byte      ammount       = 0   ;
@@ -100,20 +100,17 @@ void handle_input()
             {
             case SDL_MOUSEBUTTONDOWN:
                 SDL_GetMouseState( &mousePosition.x, &mousePosition.y);
-                mouse_event<player>(selected, ammount, moveDirection, rowDirection, mousePosition);
+                mouse_event<player>(selected, ammount, moveDirection, rowDirection, mousePosition, board);
                 break;
             case SDL_QUIT:
-                //end program
-                return;
+                quit = true;
+                return true;
             }
         }
 
-        output.new_frame(selected, ammount, rowDirection);
+        output.new_frame(selected, ammount, rowDirection, board);
 
         if(moveDirection != null)
-        {
-            move(get_move<player>(selected, ammount, moveDirection, rowDirection));
-            return;
-        }
+            return move(get_move<player>(selected, ammount, moveDirection, rowDirection), board);
     }
 }

@@ -9,19 +9,20 @@
 #include "../IO/input.cpp"
 
 graphic output;
+bool quit = false;
+map board;
 
 int main()
 {
     SDL_Init(SDL_INIT_EVENTS);
 
-    output.new_frame(position{.x = 0, .y = 0}, 0, null);
+    output.new_frame(position{.x = 0, .y = 0}, 0, null, board);
 
-    for (size_t i = 0; i < 5; i++)
+    while(!quit)
     {
-        handle_input<player0>();
-        handle_input<player1>();
+        while(!handle_input<player0>(board)){}
+        while(!handle_input<player1>(board)){}
     }
     
-
     SDL_Quit();
 }

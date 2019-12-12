@@ -15,8 +15,6 @@ enum tile{
     player1 = 1
 };
 
-
-
 tile r0[5] = {player0, player0, player0, player0, player0};
 tile r1[6] = {player0, player0, player0, player0, player0, player0};
 tile r2[7] = {empty, empty, player0, player0, player0, empty, empty};
@@ -27,9 +25,15 @@ tile r6[7] = {empty, empty, player1, player1, player1, empty, empty};
 tile r7[6] = {player1, player1, player1, player1, player1, player1};
 tile r8[5] = {player1, player1, player1, player1, player1};
 
-tile* map[9] = {r0, r1, r2, r3, r4, r5, r6, r7, r8};
-
-
+class map
+{
+    private:
+        tile* data[9] = {r0, r1, r2, r3, r4, r5, r6, r7, r8};
+    public:
+        tile& operator[](const position &_position){ return data[_position.y][_position.x]; }
+        tile** begin() { return data; }
+        tile** end() { return data + 9; }
+};
 
 bool on_board(const position &Tile)
 {

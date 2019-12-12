@@ -1,4 +1,4 @@
- - fix bug can only select in second row selects two bullets left
+ - add pushing
  - add side movement
  - create board image
  - render board
