@@ -1,4 +1,4 @@
- - add pushing
+ - add a direction converter for the middle layer because top left dosen't stay top left
  - add side movement
  - create board image
  - render board
