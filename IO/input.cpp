@@ -11,64 +11,74 @@ void mouse_event(position &selected, byte &ammount, direction &move_direction, d
     cursorOnBoard.y = (cursorPosition.y - 300) / 100;
     cursorOnBoard.x = (cursorPosition.x - ((900 - (9 - modulus(cursorOnBoard.y - 4)) * 100) / 2)) / 100;
 
-    if(ammount == 0)
-    {
-        if (!on_board(cursorOnBoard))
-            return;
+    if (!on_board(cursorOnBoard))
+        return;
 
-        if(board[cursorOnBoard] == player)
-        {
-            selected = cursorOnBoard;
-            ammount++;        
-        }
-    }
-    else
+    if(ammount == 1)//get direction to the second
     {
-        if(row_direction == null)
+        for (direction i = (direction)0; i < null; i = (direction)(i + 1))
         {
-            for (direction i = (direction)0; i < null; i = (direction)(i + 1))
+            if (get_field_index(selected, i, 1) == cursorOnBoard)
             {
-                if (get_field_index(selected, i, 1) == cursorOnBoard)
+                if(board[cursorOnBoard] == player)
                 {
                     row_direction = i;
                     ammount++;
                 }
+                else if(board[cursorOnBoard] == empty)//only move to empty because 1 ball cannot push
+                {
+                    row_direction = i;
+                    move_direction = i;
+                }
+                
+                return;
             }
         }
-        else
+    }
+    else if(row_direction != null)
+    {
+        if(cursorOnBoard == get_field_index(selected, row_direction, ammount))//forward move
         {
-            if(cursorOnBoard == get_field_index(selected, row_direction, ammount))
+            if (board[cursorOnBoard] == player)
+                ammount++;
+            else
+                move_direction = row_direction;
+
+            return;
+        }
+        else if(get_field_index(selected, row_direction, -1) == cursorOnBoard)//backward move
+        {
+            if(board[cursorOnBoard] == player)
             {
-                if (board[cursorOnBoard] == player)
-                    ammount++;
-                else
-                    move_direction = row_direction;
+                selected = cursorOnBoard;
+                ammount++;        
             }
             else
             {
-                if(get_field_index(selected, row_direction, -1) == cursorOnBoard)
-                {
-                    if(board[cursorOnBoard] == player)
-                    {
-                        selected = cursorOnBoard;
-                        ammount++;        
-                    }
-                    else
-                    {
-                        set_field_index(selected, row_direction, ammount -1);
-                        row_direction = opposite_direction(row_direction);
-                        move_direction = row_direction;
-                    }
-                }
+                set_field_index(selected, row_direction, ammount -1);
+                row_direction = opposite_direction(row_direction);
+                move_direction = row_direction;
             }
-            
+
+            return;
         }
-        
+        else
+        {
+            
+            return;
+        }
+    }
+
+    if(board[cursorOnBoard] == player)
+    {
+        selected = cursorOnBoard;
+        ammount = 1;   
+        row_direction = null;     
     }
 }
 
 template<const tile player>
-action get_move(const position &selected, const byte &ammount, const direction &move_direction, const direction &row_direction)
+action get_move(position &selected, byte &ammount, direction &move_direction, direction &row_direction)
 {
     action retVal;
 
@@ -77,6 +87,10 @@ action get_move(const position &selected, const byte &ammount, const direction &
     retVal.ballC          = ammount       ;
     retVal.row_direction  = row_direction ;
     retVal.move_direction = move_direction;
+
+    ammount        = 0;
+    row_direction  = null;
+    move_direction = null;
 
     return retVal;
 }
@@ -100,17 +114,23 @@ bool handle_input(map &board)
             {
             case SDL_MOUSEBUTTONDOWN:
                 SDL_GetMouseState( &mousePosition.x, &mousePosition.y);
+                mouse_event_getinfo_call
                 mouse_event<player>(selected, ammount, moveDirection, rowDirection, mousePosition, board);
+
+                render_call
+                output.new_frame(selected, ammount, rowDirection, board);
+
+                if(moveDirection != null)
+                {
+                    movement_call
+                    return move(get_move<player>(selected, ammount, moveDirection, rowDirection), board);
+                }
+                    
                 break;
             case SDL_QUIT:
                 quit = true;
                 return true;
             }
         }
-
-        output.new_frame(selected, ammount, rowDirection, board);
-
-        if(moveDirection != null)
-            return move(get_move<player>(selected, ammount, moveDirection, rowDirection), board);
     }
 }
