@@ -1,6 +1,9 @@
 #define DefBallIMG "../IO/img/ball.png"
 #define DefBoardImg "../IO/img/board.png"
 
+#define debug
+#include "../bugtracker.hpp"
+
 #include "../datatypes.hpp"
 #include "../game dynamic/moves.hpp"
 #include "../IO/graphic.hpp"
