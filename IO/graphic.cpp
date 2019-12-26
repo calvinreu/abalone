@@ -12,7 +12,7 @@ graphic::graphic()
 {
     SDL_Init(SDL_INIT_VIDEO);
 
-    window = SDL_CreateWindow( "abalone", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 100 * 9, 100 * 15, SDL_WINDOW_VULKAN);
+    window = SDL_CreateWindow( "abalone", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 100 * 9, 100 * 15, SDL_WINDOW_FULLSCREEN_DESKTOP);
 
     if(window == NULL)
         std::cout << "Window could not be created! SDL Error: %s\n" << SDL_GetError() << std::endl;
