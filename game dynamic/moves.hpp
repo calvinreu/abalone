@@ -22,13 +22,13 @@ inline void straight_empty(const action &_move, const position &last_tile, map &
 
 inline bool straight_full(const action &_move, const position &startEnemyRow, map &board)
 {
-    byte enemyC = 2;
+    byte enemyC = 1;
     position currentTile = startEnemyRow;
     while (true)
     {
         set_field_index(currentTile, _move.move_direction, 1);
 
-        if (board[startEnemyRow] == empty)
+        if (board[currentTile] == empty)
         {
             board[startEnemyRow] = _move.player;
             board[_move._position] = empty;
