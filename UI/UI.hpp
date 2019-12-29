@@ -4,7 +4,7 @@
 #include "input.hpp"
 #include "output_constants.hpp"
 #include <thread>
-
+#include "../bugtracker.hpp"
 
 struct row
 {
@@ -15,4 +15,4 @@ struct row
 
 extern void start_UI(const map &board, bool &running);
 extern void run_output(const map &board, const bool &running, const row &selected);
-extern void run_input(const map &board, bool &running);
+extern void run_input(const map &board, bool &running, row &selected);

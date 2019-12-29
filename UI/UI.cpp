@@ -4,7 +4,7 @@ void start_UI(const map &board, bool &running)
 {
     row selected;
     std::thread t_renderer(run_output, board, running, selected);
-    //std::thread t_input(run_input, );
+    std::thread t_input(run_input, board, running, selected);
 }
 
 void run_output(const map &board, const bool &running, const row &selected)
@@ -22,4 +22,11 @@ void run_output(const map &board, const bool &running, const row &selected)
     }    
 }
 
-void run_input()
+void run_input(const map &board, bool &running, row &selected)
+{
+    while (running)
+    {
+        while (!handle_input<player0>(board, running, selected.first, selected.ammount, selected.row_direction)){}
+        while (!handle_input<player0>(board, running, selected.first, selected.ammount, selected.row_direction)){}
+    }
+}
