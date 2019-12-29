@@ -1,6 +1,6 @@
 #include "datatypes.hpp"
 #include "game dynamic/moves.hpp"
-#include "IO/graphic.hpp"
+#include "UI/graphic.hpp"
 
 
 graphic output;

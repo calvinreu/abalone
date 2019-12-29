@@ -5,4 +5,7 @@
 #endif
 
 #ifdef release
+#define movement_call
+#define mouse_event_getinfo_call
+#define render_call
 #endif

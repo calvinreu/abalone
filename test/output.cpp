@@ -1,10 +1,10 @@
-#define DefBallIMG "../IO/img/ball.png"
-#define DefBoardImg "../IO/img/board.png"
+#define DefBallIMG "../UI/img/ball.png"
+#define DefBoardImg "../UI/img/board.png"
 
 #include "../datatypes.hpp"
 #include "../game dynamic/moves.hpp"
-#include "../IO/graphic.hpp"
-#include "../IO/graphic.cpp"
+#include "../UI/graphic.hpp"
+#include "../UI/graphic.cpp"
 
 graphic output;
 
