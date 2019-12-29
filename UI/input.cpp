@@ -1,10 +1,7 @@
 #include "input.hpp"
 
-extern graphic output;
-extern bool quit;
-
 template<const tile player>
-void mouse_event(position &selected, byte &ammount, direction &move_direction, direction &row_direction, const pair<int> &cursorPosition, map &board)
+void mouse_event(position &selected, byte &ammount, direction &move_direction, direction &row_direction, const pair<int> &cursorPosition, const map &board)
 {
     position cursorOnBoard;
 
@@ -78,12 +75,12 @@ void mouse_event(position &selected, byte &ammount, direction &move_direction, d
 }
 
 template<const tile player>
-action get_move(position &selected, byte &ammount, direction &move_direction, direction &row_direction)
+action get_action(const position &first, const byte &ammount, const direction &move_direction, const direction &row_direction)
 {
     action retVal;
 
     retVal.player         = player        ;
-    retVal._position      = selected      ;
+    retVal._position      = first         ;
     retVal.ballC          = ammount       ;
     retVal.row_direction  = row_direction ;
     retVal.move_direction = move_direction;
@@ -96,38 +93,30 @@ action get_move(position &selected, byte &ammount, direction &move_direction, di
 }
 
 template<const tile player>
-bool handle_input(map &board)
+bool handle_input(const map &board, bool &running, position &first, byte &ammount, direction &row_direction)
 {
-    position  selected            ; 
-    byte      ammount       = 0   ;
     direction moveDirection = null;
-    direction rowDirection  = null;
     pair<int> mousePosition;
-
     SDL_Event e;
 
-    while (true)
+    while(!SDL_PollEvent( &e ))
     {
-        while(!SDL_PollEvent( &e ))
+        switch (e.type)
         {
-            switch (e.type)
+        case SDL_MOUSEBUTTONDOWN:
+            SDL_GetMouseState( &mousePosition.x, &mousePosition.y);
+            mouse_event_getinfo_call
+            mouse_event<player>(selected.first, selected.ammount, moveDirection, selected.row_direction, mousePosition, board);
+            if(moveDirection != null)
             {
-            case SDL_MOUSEBUTTONDOWN:
-                SDL_GetMouseState( &mousePosition.x, &mousePosition.y);
-                mouse_event_getinfo_call
-                mouse_event<player>(selected, ammount, moveDirection, rowDirection, mousePosition, board);
+                movement_call
+                return move(get_move<player>(first, ammount, moveDirection, rowDirection), board);
+            }  
+            break;
 
-                if(moveDirection != null)
-                {
-                    movement_call
-                    return move(get_move<player>(selected, ammount, moveDirection, rowDirection), board);
-                }
-                    
-                break;
-            case SDL_QUIT:
-                quit = true;
-                return true;
-            }
+        case SDL_QUIT:
+            running = false;
+            return true;
         }
     }
 }
