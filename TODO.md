@@ -1,3 +1,4 @@
+ - make a constant begin and end function for class map
  - add a direction converter for the middle layer because top left dosen't stay top left
  - add side movement
  - create board image
