@@ -1,8 +1,8 @@
 #pragma once
 #include <SDL2/SDL.h>
 #include "../bugtracker.hpp"
-#include "../game dynamic/board.hpp"
-#include "../game dynamic/moves.hpp"
+#include "../game_dynamic/board.hpp"
+#include "../game_dynamic/moves.hpp"
 #include "../datatypes.hpp"
 
 template<const tile player>

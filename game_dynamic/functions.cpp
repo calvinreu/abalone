@@ -1,5 +1,4 @@
-#pragma once
-#include "../datatypes.hpp"
+#include "functions.hpp"
 
 byte modulus(const s_byte &x)
 {

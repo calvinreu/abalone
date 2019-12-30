@@ -2,7 +2,7 @@
 #define DefBoardImg "../UI/img/board.png"
 
 #include "../datatypes.hpp"
-#include "../game dynamic/moves.hpp"
+#include "../game_dynamic/moves.hpp"
 #include "../UI/graphic.hpp"
 #include "../UI/graphic.cpp"
 #include <iostream>

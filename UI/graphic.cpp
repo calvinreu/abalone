@@ -1,5 +1,4 @@
 #include "graphic.hpp"
-#include <iostream>
 
 #ifndef DefBallIMG
 #define DefBallIMG "./UI/img/ball.png"
@@ -7,6 +6,9 @@
 #ifndef DefBoardIMG
 #define DefBoardIMG "./UI/img/board.png"
 #endif
+
+extern byte lostBallCPlayer0;
+extern byte lostBallCPlayer1;
 
 graphic::graphic()
 {

@@ -1,18 +1,4 @@
-#pragma once
-#include "../datatypes.hpp"
-#include "board.hpp"
-
-enum direction
-{
-    up_left = 2,
-    up_right = 3,
-    right = 0,
-    down_right = 4,
-    down_left = 5,
-    left = 1,
-    null = 6
-    
-};
+#include "move_dynamic.hpp"
 
 direction opposite_direction(const direction &first)
 {
