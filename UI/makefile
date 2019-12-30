@@ -11,5 +11,5 @@ output: graphic.cpp
 input: input.cpp
 	$(CC) -lSDL2 input.cpp -o input.o
 
-UI: UI.cpp output.o
+UI: UI.cpp output.o input.o
 	$(CC) -lthread UI.cpp output.o input.o -o UI.o
