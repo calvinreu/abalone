@@ -24,15 +24,19 @@ tile r5[8] = {empty, empty, empty, empty, empty, empty, empty, empty};
 tile r6[7] = {empty, empty, player1, player1, player1, empty, empty};
 tile r7[6] = {player1, player1, player1, player1, player1, player1};
 tile r8[5] = {player1, player1, player1, player1, player1};
+tile* map_data[9] = {r0, r1, r2, r3, r4, r5, r6, r7, r8};
 
 class map
 {
     private:
-        tile* data[9] = {r0, r1, r2, r3, r4, r5, r6, r7, r8};
+        tile** data = map_data;
     public:
         tile& operator[](const position &_position){ return data[_position.y][_position.x]; }
-        tile** begin() { return data; }
-        tile** end() { return data + 9; }
+        const tile& operator[](const position &_position) const { return data[_position.y][_position.x]; }
+        const tile** begin() const { return const_cast<const tile**>(data)    ; }
+        const tile** end()   const { return const_cast<const tile**>(data + 9); }
+        tile** begin() { return data    ; }
+        tile** end()   { return data + 9; }
 };
 
 bool on_board(const position &Tile)
