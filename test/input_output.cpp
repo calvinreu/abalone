@@ -4,12 +4,8 @@
 #define debug
 #include "../bugtracker.hpp"
 
-#include "../datatypes.hpp"
-#include "../game dynamic/moves.hpp"
-#include "../UI/graphic.hpp"
-#include "../UI/graphic.cpp"
-#include "../UI/input.hpp"
-#include "../UI/input.cpp"
+#include "../global_info.hpp"
+#include "../UI/UI.hpp"
 
 graphic output;
 bool quit = false;
@@ -17,15 +13,10 @@ map board;
 
 int main()
 {
-    SDL_Init(SDL_INIT_EVENTS);
-
-    output.new_frame(position{.x = 0, .y = 0}, 0, null, board);
-
-    while(!quit)
-    {
-        while(!handle_input<player0>(board)){}
-        while(!handle_input<player1>(board)){}
-    }
-    
+    map board;
+    bool running;
+    auto threads = start_UI(board, running);
+    threads.t_input->join();
+    threads.t_renderer->join();
     SDL_Quit();
 }
