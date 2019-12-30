@@ -1,12 +1,15 @@
 #include "UI.hpp"
 
-void start_UI(const map &board, bool &running)
+UI_threads start_UI(const map &board, bool &running)
 {
+    UI_threads retVal;
     row selected;
     std::thread t_renderer(run_output, std::ref(board), std::ref(running), std::ref(selected));
     std::thread t_input(run_input, std::ref(board), std::ref(running), std::ref(selected));
-    t_renderer.detach();
-    t_input.detach();
+    retVal.t_renderer = &t_renderer;
+    retVal.t_input    = &t_input    ;
+
+    return retVal;
 }
 
 void run_output(const map &board, const bool &running, const row &selected)
@@ -26,9 +29,10 @@ void run_output(const map &board, const bool &running, const row &selected)
 
 void run_input(const map &board, bool &running, row &selected)
 {
+    SDL_Init(SDL_INIT_EVENTS);
     while (running)
     {
         while (!handle_input<player0>(board, running, selected.first, selected.ammount, selected.row_direction)){}
-        while (!handle_input<player0>(board, running, selected.first, selected.ammount, selected.row_direction)){}
+        while (!handle_input<player1>(board, running, selected.first, selected.ammount, selected.row_direction)){}
     }
 }
