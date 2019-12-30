@@ -3,8 +3,10 @@
 void start_UI(const map &board, bool &running)
 {
     row selected;
-    std::thread t_renderer(run_output, board, running, selected);
-    std::thread t_input(run_input, board, running, selected);
+    std::thread t_renderer(run_output, std::ref(board), std::ref(running), std::ref(selected));
+    std::thread t_input(run_input, std::ref(board), std::ref(running), std::ref(selected));
+    t_renderer.detach();
+    t_input.detach();
 }
 
 void run_output(const map &board, const bool &running, const row &selected)

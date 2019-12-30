@@ -106,11 +106,11 @@ bool handle_input(const map &board, bool &running, position &first, byte &ammoun
         case SDL_MOUSEBUTTONDOWN:
             SDL_GetMouseState( &mousePosition.x, &mousePosition.y);
             mouse_event_getinfo_call
-            mouse_event<player>(selected.first, selected.ammount, moveDirection, selected.row_direction, mousePosition, board);
+            mouse_event<player>(first, ammount, moveDirection, row_direction, mousePosition, board);
             if(moveDirection != null)
             {
                 movement_call
-                return move(get_move<player>(first, ammount, moveDirection, rowDirection), board);
+                return move(get_move<player>(first, ammount, moveDirection, row_direction), board);
             }  
             break;
 
