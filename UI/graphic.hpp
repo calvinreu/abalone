@@ -4,6 +4,7 @@
 #include <vector>
 #include "../game dynamic/board.hpp"
 #include "../game dynamic/move_dynamic.hpp"
+#include "../bugtracker.hpp"
 #include "rect.hpp"
 
 class split_texture

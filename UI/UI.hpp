@@ -1,10 +1,9 @@
 #pragma once
-#include "board.hpp"
+#include "../game dynamic/board.hpp"
 #include "graphic.hpp"
 #include "input.hpp"
 #include "output_constants.hpp"
 #include <thread>
-#include "../bugtracker.hpp"
 
 struct row
 {

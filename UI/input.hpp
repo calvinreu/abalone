@@ -1,5 +1,6 @@
 #pragma once
 #include <SDL2/SDL.h>
+#include "../bugtracker.hpp"
 #include "../game dynamic/board.hpp"
 #include "../game dynamic/moves.hpp"
 #include "../datatypes.hpp"
