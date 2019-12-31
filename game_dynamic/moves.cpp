@@ -1,12 +1,16 @@
 #include "moves.hpp"
 
-inline void straight_empty(const action &_move, const position &last_tile, map &board)
+extern map board;
+extern byte lostBallCPlayer1;
+extern byte lostBallCPlayer0;
+
+inline void straight_empty(const action &_move, const position &last_tile)
 {
     board[_move._position]  = empty;
     board[last_tile] = _move.player;
 }
 
-inline bool straight_full(const action &_move, const position &startEnemyRow, map &board)
+inline bool straight_full(const action &_move, const position &startEnemyRow)
 {
     byte enemyC = 1;
     position currentTile = startEnemyRow;
@@ -49,7 +53,7 @@ inline bool straight_full(const action &_move, const position &startEnemyRow, ma
     }
 }
 
-bool move(const action &_move, map &board)
+bool move(const action &_move)
 {
 
     if(_move.ballC > 3)// over free balls
@@ -67,7 +71,7 @@ bool move(const action &_move, map &board)
 
         if (board[currentTile] == empty)
         {
-            straight_empty(_move, currentTile, board);
+            straight_empty(_move, currentTile);
             return true;
         }
         else if (board[currentTile] == _move.player)
@@ -76,7 +80,7 @@ bool move(const action &_move, map &board)
         }
         else
         {
-            return straight_full(_move, currentTile, board);
+            return straight_full(_move, currentTile);
         }
     }
     /*else

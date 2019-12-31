@@ -75,7 +75,7 @@ void mouse_event(position &selected, byte &ammount, direction &move_direction, d
 }
 
 template<const tile player>
-action get_action(const position &first, const byte &ammount, const direction &move_direction, const direction &row_direction)
+action get_move(const position &first, byte &ammount, direction &move_direction, direction &row_direction)
 {
     action retVal;
 
@@ -110,7 +110,7 @@ bool handle_input(const map &board, bool &running, position &first, byte &ammoun
             if(moveDirection != null)
             {
                 movement_call
-                return move(get_move<player>(first, ammount, moveDirection, row_direction), board);
+                return move(get_move<player>(first, ammount, moveDirection, row_direction));
             }  
             break;
 

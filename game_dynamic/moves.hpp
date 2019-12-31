@@ -5,6 +5,7 @@
 #include "board.hpp"
 #include <iostream>
 
+
 struct action
 {
     tile player;
@@ -14,6 +15,6 @@ struct action
     direction move_direction;
 };
 
-extern inline void straight_empty(const action &_move, const position &last_tile, map &board);
-extern inline bool straight_full(const action &_move, const position &startEnemyRow, map &board);
-extern bool move(const action &_move, map &board);
+extern inline void straight_empty(const action &_move, const position &last_tile);
+extern inline bool straight_full(const action &_move, const position &startEnemyRow);
+extern bool move(const action &_move);
