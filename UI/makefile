@@ -8,8 +8,8 @@ all:
 output: graphic.cpp
 	$(CC) graphic.cpp -o output.o
 
-input: input.cpp
-	$(CC) input.cpp -o input.o
+input: input-template.cpp
+	$(CC) input-template.cpp -o input.o
 
 UI: UI.cpp
 	$(CC) UI.cpp -o UI.o
