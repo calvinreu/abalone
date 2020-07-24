@@ -1,6 +1,6 @@
 #include "functions.hpp"
 
-byte modulus(const s_byte &x)
+uint8 convertPositiv(const int8 &x)
 {
     if (x < 0)
         return 0-x;

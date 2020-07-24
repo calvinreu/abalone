@@ -1,14 +1,19 @@
 #include "input.hpp"
 
 template<const tile player>
-void mouse_event(position &selected, byte &ammount, direction &move_direction, direction &row_direction, const pair<int> &cursorPosition, const map &board)
+void mouse_event(position &selected, size_t &ammount, direction &move_direction, direction &row_direction, const pair<int> &cursorPosition, const map &board)
 {
     position cursorOnBoard;
 
-    cursorOnBoard.y = (cursorPosition.y - 300) / 100;
-    cursorOnBoard.x = (cursorPosition.x - ((900 - (9 - modulus(cursorOnBoard.y - 4)) * 100) / 2)) / 100;
+    cursorOnBoard.y = (cursorPosition.y - topSpace) / orbHeight;
+    cursorOnBoard.x = (cursorPosition.x - ((windowWidth - (layerCount - differenceToZero(cursorOnBoard.y - middleLayer)) * orbWidth) / 2)) / orbWidth;
+
+    std::cout << "cursor x: " << (int)cursorOnBoard.x << " y: " << (int)cursorOnBoard.y << "\n";
 
     if (!on_board(cursorOnBoard))
+        return;
+
+    if(ammount == 3)//needs to be changed to choose a new orb
         return;
 
     if(ammount == 1)//get direction to the second
@@ -22,7 +27,7 @@ void mouse_event(position &selected, byte &ammount, direction &move_direction, d
                     row_direction = i;
                     ammount++;
                 }
-                else if(board[cursorOnBoard] == empty)//only move to empty because 1 ball cannot push
+                else if(board[cursorOnBoard] == empty)//only move to empty because 1 orb cannot push
                 {
                     row_direction = i;
                     move_direction = i;
@@ -75,13 +80,13 @@ void mouse_event(position &selected, byte &ammount, direction &move_direction, d
 }
 
 template<const tile player>
-action get_move(const position &first, byte &ammount, direction &move_direction, direction &row_direction)
+action get_move(const position &first, size_t &ammount, direction &move_direction, direction &row_direction)
 {
     action retVal;
 
     retVal.player         = player        ;
     retVal._position      = first         ;
-    retVal.ballC          = ammount       ;
+    retVal.orbC          = ammount       ;
     retVal.row_direction  = row_direction ;
     retVal.move_direction = move_direction;
 
@@ -93,7 +98,7 @@ action get_move(const position &first, byte &ammount, direction &move_direction,
 }
 
 template<const tile player>
-bool handle_input(const map &board, bool &running, position &first, byte &ammount, direction &row_direction)
+bool handle_input(const map &board, bool &running, position &first, size_t &ammount, direction &row_direction)
 {
     direction moveDirection = null;
     pair<int> mousePosition;
@@ -119,4 +124,6 @@ bool handle_input(const map &board, bool &running, position &first, byte &ammoun
             return true;
         }
     }
+
+    return false;
 }

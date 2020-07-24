@@ -1,8 +1,8 @@
 #include "moves.hpp"
 
 extern map board;
-extern byte lostBallCPlayer1;
-extern byte lostBallCPlayer0;
+extern size_t lostorbCPlayer1;
+extern size_t lostorbCPlayer0;
 
 inline void straight_empty(const action &_move, const position &last_tile)
 {
@@ -12,7 +12,7 @@ inline void straight_empty(const action &_move, const position &last_tile)
 
 inline bool straight_full(const action &_move, const position &startEnemyRow)
 {
-    byte enemyC = 1;
+    size_t enemyC = 1;
     position currentTile = startEnemyRow;
     while (true)
     {
@@ -28,26 +28,26 @@ inline bool straight_full(const action &_move, const position &startEnemyRow)
                 if (on_board(currentTile))
                     board[currentTile] = player1;
                 else
-                    lostBallCPlayer1++;
+                    lostorbCPlayer1++;
             }
             else
             {
                 if (on_board(currentTile))
                     board[currentTile] = player0;
                 else
-                    lostBallCPlayer0++;
+                    lostorbCPlayer0++;
             }
 
             return true;
         }
         else if (board[currentTile] == _move.player)
         {
-            return false;//cannot push own balls
+            return false;//cannot push own orbs
         }
         else
         {
             enemyC++;
-            if (enemyC > _move.ballC)
+            if (enemyC > _move.orbC)
                 return false;
         }
     }
@@ -56,7 +56,7 @@ inline bool straight_full(const action &_move, const position &startEnemyRow)
 bool move(const action &_move)
 {
 
-    if(_move.ballC > 3)// over free balls
+    if(_move.orbC > 3)// over free orbs
         return false;
 
     position currentTile = _move._position;
@@ -64,7 +64,7 @@ bool move(const action &_move)
     if(_move.row_direction == _move.move_direction)
     {
         //straight moves
-        set_field_index(currentTile, _move.move_direction, (s_byte)_move.ballC);
+        set_field_index(currentTile, _move.move_direction, _move.orbC);
 
         if(!on_board(currentTile))
             return false;
@@ -76,7 +76,7 @@ bool move(const action &_move)
         }
         else if (board[currentTile] == _move.player)
         {
-            return false;//cannot push own balls
+            return false;//cannot push own orbs
         }
         else
         {
@@ -90,7 +90,7 @@ bool move(const action &_move)
 
         if(map[currentTile.y][currentTile.x] == empty)
         {
-            for (size_t i = 1; i < move_.ballC; i++)
+            for (size_t i = 1; i < move_.orbC; i++)
             {
                 set_field_index(currentTile, move_.row_direction, 1);
 
@@ -100,7 +100,7 @@ bool move(const action &_move)
 
             currentTile = {move_.xpos, move_.ypos};
             set_field_index(currentTile, move_.move_direction, 1);
-            for (size_t i = 1; i < move_.ballC; i++)
+            for (size_t i = 1; i < move_.orbC; i++)
             {
                 set_field_index(currentTile, move_.row_direction, 1);
                 map[currentTile.y][currentTile.x] = move_.player;

@@ -6,7 +6,11 @@
 #include "../game_dynamic/board.hpp"
 #include "../game_dynamic/move_dynamic.hpp"
 #include "../bugtracker.hpp"
-#include "rect.hpp"
+#include "config.h"
+#include "row.h"
+
+#define DeforbIMG "../UI/img/orb.png"
+#define DefBoardImg "../UI/img/board.png"
 
 class split_texture
 {
@@ -24,13 +28,13 @@ private:
     SDL_Renderer* renderer = NULL;
     SDL_Window* window     = NULL;
 
-    SDL_Surface* ballS = NULL;
+    SDL_Surface* orbS = NULL;
     SDL_Surface* boardS = NULL;
 
-    split_texture ball;
+    split_texture orb;
 public:
 
-    void new_frame(const position &selected, const byte &ammount, const direction &row_direction, const map &board);
+    void new_frame(const row &selected, const map &board);
 
     graphic();
     ~graphic();

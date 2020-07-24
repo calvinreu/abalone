@@ -10,7 +10,7 @@ struct action
 {
     tile player;
     position _position;
-    byte ballC;
+    size_t orbC;
     direction row_direction;
     direction move_direction;
 };

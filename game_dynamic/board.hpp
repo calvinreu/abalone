@@ -2,9 +2,8 @@
 #include "../datatypes.hpp"
 #include "functions.hpp"
 
-const byte middleLayerLenght = 9;
-const byte layerC = 4;//layer count from middle to border
-const byte middleLayer = 5;
+const int layerCount = 9;
+const int middleLayer = (layerCount-1)/2;
 
 enum tile{
     empty = 2,
@@ -20,10 +19,10 @@ class map
         map();
         tile& operator[](const position &_position){ return data[_position.y][_position.x]; }
         const tile& operator[](const position &_position) const { return data[_position.y][_position.x]; }
-        const tile** begin() const { return const_cast<const tile**>(data)    ; }
-        const tile** end()   const { return const_cast<const tile**>(data + 9); }
+        const tile* const* begin() const { return data    ; }
+        const tile* const* end()   const { return data + layerCount; }
         tile** begin() { return data    ; }
-        tile** end()   { return data + 9; }
+        tile** end()   { return data + layerCount; }
 };
 
 extern bool on_board(const position &Tile);

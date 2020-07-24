@@ -1,20 +1,18 @@
 #include "graphic.hpp"
 
-#ifndef DefBallIMG
-#define DefBallIMG "./UI/img/ball.png"
+#ifndef DeforbIMG
+#define DeforbIMG "./UI/img/orb.png"
 #endif
 #ifndef DefBoardIMG
 #define DefBoardIMG "./UI/img/board.png"
 #endif
 
-extern byte lostBallCPlayer0;
-extern byte lostBallCPlayer1;
+extern int lostorbCPlayer0;
+extern int lostorbCPlayer1;
 
 graphic::graphic()
 {
-    SDL_Init(SDL_INIT_VIDEO);
-
-    window = SDL_CreateWindow( "abalone", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 100 * 9, 100 * 15, SDL_WINDOW_FULLSCREEN_DESKTOP);
+    window = SDL_CreateWindow( "abalone", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, windowWidth, windowHeight, SDL_WINDOW_MINIMIZED);
 
     if(window == NULL)
         std::cout << "Window could not be created! SDL Error: %s\n" << SDL_GetError() << std::endl;
@@ -30,30 +28,31 @@ graphic::graphic()
         std::cout << "SDL_image could not be initialize! SDL Error: %s\n" << SDL_GetError() << std::endl;
 
     
-    ballS = IMG_Load(DefBallIMG);
+    orbS = IMG_Load(DeforbIMG);
 
-    if( ballS == NULL )
-        std::cout << "unable to load image: %s \n" << DefBallIMG << IMG_GetError() << std::endl;
+    if( orbS == NULL )
+        std::cout << "unable to load image: %s \n" << DeforbIMG << IMG_GetError() << std::endl;
 
     boardS = IMG_Load("./UI/img/board.png");
 
     if( boardS == NULL )
         std::cout << "unable to load image: %s \n" << DefBoardIMG << IMG_GetError() << std::endl;
 
-    ball.LoadFromSurface(ballS, renderer);
+    orb.LoadFromSurface(orbS, renderer);
 
     SDL_SetRenderDrawColor(renderer, 0, 0, 200, 255);
 }
 
 graphic::~graphic()
 {
+
+    orb.free();
+
+    SDL_FreeSurface(orbS);
+    SDL_FreeSurface(boardS);
+    
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);
-
-    SDL_FreeSurface(ballS);
-    SDL_FreeSurface(boardS);
-
-    ball.free();
 
     window = NULL;
     renderer = NULL;
@@ -61,64 +60,63 @@ graphic::~graphic()
     IMG_Quit();
 }
 
-void graphic::new_frame(const position &selected, const byte &ammount, const direction &row_direction, const map &board)
+void graphic::new_frame(const row &selected, const map &board)
 {
     SDL_RenderClear(renderer);
 
-    byte layerLenght;
-    byte layer = 0;
-    SDL_Rect destRect = {.x = (900-(lostBallCPlayer0 * 100))/2, .y = 100, .w = 100, .h = 100};
+    size_t layerLenght;
+    size_t layer = 0;
+    SDL_Rect destRect = {.x = (layerCount-lostorbCPlayer0) * orbWidth/2, .y = emptySpace, .w = orbWidth, .h = orbHeight};
 
 
-    for (size_t i = 0; i < lostBallCPlayer0; i++)
+    for (size_t i = 0; i < lostorbCPlayer0; i++)
     {
-        ball.RenderCopy(&black_ball, &destRect, renderer);
-        destRect.x += 100;
+        orb.RenderCopy(&black_orb, &destRect, renderer);
+        destRect.x += orbWidth;
     }
     
-    destRect.y = 300;
+    destRect.y = topSpace;//everything above the board
 
     for (auto i = board.begin(); i < board.end(); i++)
     {
-        layerLenght = 9 - modulus(layer - 4);
-        destRect.x = (900-(layerLenght * 100))/2;
+        layerLenght = layerCount - differenceToZero<int>(layer - 4);
+        destRect.x = (layerCount-layerLenght)*orbWidth/2;
+
+        //std::cout << layerLenght << "\n";
+        //std::cout << differenceToZero<int>(layer - 4) << "\n";
 
         for (auto i1 = *i; i1 < *i + layerLenght; i1++)
         {
-            switch (*i1)
-            {
-            case player0:
-                ball.RenderCopy(&black_ball, &destRect, renderer);
-                break;
-            
-            case player1:
-                ball.RenderCopy(&white_ball, &destRect, renderer);
-                break;
-            }
+            if (*i1 == player0)
+                orb.RenderCopy(&black_orb, &destRect, renderer);
+            else if (*i1 == player1)
+                orb.RenderCopy(&white_orb, &destRect, renderer);
 
-            destRect.x += 100;
+            destRect.x += orbWidth;
         }
 
-        destRect.y += 100;
+        destRect.y += orbHeight;
         layer++;
     }
 
-    destRect.x = (900-(lostBallCPlayer1 * 100))/2;
+    destRect.x = (layerCount-lostorbCPlayer1) * orbWidth/2;
 
-    for (size_t i = 0; i < lostBallCPlayer1; i++)
+    for (size_t i = 0; i < lostorbCPlayer1; i++)
     {
-        ball.RenderCopy(&white_ball, &destRect, renderer);
-        destRect.x += 100;
+        orb.RenderCopy(&white_orb, &destRect, renderer);
+        destRect.x += orbWidth;
     }
 
-    position tempTile = selected;
+    position tempTile = selected.first;
 
-    for (size_t i = 0; i < ammount; i++)
+    for (size_t i = 0; i < selected.ammount; i++)
     {
-        destRect.x = ((900-((9 -(modulus(tempTile.y - 4))) * 100))/2) + (tempTile.x * 100);
-        destRect.y = 300 + (tempTile.y * 100);
-        ball.RenderCopy(&selected_ball, &destRect, renderer);
-        set_field_index(tempTile, row_direction, 1);
+        destRect.x = (layerCount - differenceToZero(tempTile.y - middleLayer))*orbWidth/2 + (tempTile.x * orbWidth);
+        destRect.y = topSpace + (tempTile.y * orbHeight);
+        orb.RenderCopy(&selected_orb, &destRect, renderer);
+        set_field_index(tempTile, selected.row_direction, 1);
+
+        std::cout << "destRect x: " << destRect.x << "destRect y: " << destRect.y << "\n";
     }
 
     SDL_RenderPresent(renderer);

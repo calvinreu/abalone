@@ -1,4 +1,7 @@
 #pragma once
-#include "../datatypes.hpp"
+#include <datatypes.h>
 
-extern byte modulus(const s_byte &x);
+extern uint8 convertPositiv(const int8 &x);
+
+template<typename T>
+extern T differenceToZero(const T &value){ return value < 0 ? -value : value; }

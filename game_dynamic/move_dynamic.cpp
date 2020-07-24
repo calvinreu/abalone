@@ -22,85 +22,54 @@ direction opposite_direction(const direction &first)
     
 }
 
-void set_field_index(position &field, const direction &change, const s_byte &ammount)
+void set_field_index(position &field, const direction &change, const size_t &ammount)
 {
-    if (change < 2)
+    if (change < 2)//left right
         if (change == left)
             field.x -= ammount;
         else
             field.x += ammount;
-    else if(change < 4)
+    else if(change < 4)//up
     {
+        s_byte yPos = field.y - ammount;
 
-        if(field.y > middleLayer)
+        if (change == up_right)
         {
-            if (change == up_right)
-                field.x += ammount;
+            for (field.y; field.y > yPos; field.y--)
+                if(field.y > middleLayer)
+                    field.x++;
+            
         }
         else
         {
-            if (change == up_left)
-                field.x -= ammount;
-        }
-
-        field.y -= ammount;         
+            for (field.y; field.y > yPos; field.y--)
+                if (!(field.y > middleLayer))
+                    field.x--;
+        }   
     }
-    else
+    else//down
     {
-        if(field.y < middleLayer)
+        s_byte yPos = field.y + ammount;
+
+        if (change == down_right)
         {
-            if (change == down_right)
-                field.x += ammount;
+            for (field.y; field.y < yPos; field.y++)
+                if (field.y < middleLayer)
+                    field.x++;
         }
         else
         {
-            if (change == down_left)
-                field.x -= ammount;
+            for (field.y; field.y < yPos; field.y++)
+                if (!(field.y < middleLayer))
+                    field.x--;
         }
 
-        field.y += ammount;            
     }    
 }
 
-position get_field_index(const position &field, const direction &change, const s_byte &ammount)
+position get_field_index(const position &field, const direction &change, const size_t &ammount)
 {
     position retVal = field;
-
-    if (change < 2)
-        if (change == left)
-            retVal.x -= ammount;
-        else
-            retVal.x += ammount;
-    else if(change < 4)
-    {
-        if(retVal.y > middleLayer)
-        {
-            if (change == up_right)
-                retVal.x += ammount;
-        }
-        else
-        {
-            if (change == up_left)
-                retVal.x -= ammount;
-        }
-
-        retVal.y -= ammount;         
-    }
-    else
-    {
-        if(retVal.y < middleLayer)
-        {
-            if (change == down_right)
-                retVal.x += ammount;
-        }
-        else
-        {
-            if (change == down_left)
-                retVal.x -= ammount;
-        }
-
-        retVal.y += ammount;          
-    }
-
+    set_field_index(retVal, change, ammount);
     return retVal;
 }

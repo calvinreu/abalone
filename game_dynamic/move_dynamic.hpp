@@ -14,6 +14,6 @@ enum direction
     
 };
 
-extern void set_field_index(position &field, const direction &change, const s_byte &ammount);
-extern position get_field_index(const position &field, const direction &change, const s_byte &ammount);
+extern void set_field_index(position &field, const direction &change, const size_t &ammount);
+extern position get_field_index(const position &field, const direction &change, const size_t &ammount);
 extern direction opposite_direction(const direction &first);

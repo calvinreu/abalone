@@ -3,8 +3,6 @@
 #include "UI/graphic.hpp"
 
 
-graphic output;
-
 int main()
 {
     
