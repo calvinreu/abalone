@@ -1,9 +1,7 @@
 #include "datatypes.hpp"
-#include "game dynamic/moves.hpp"
-#include "IO/graphic.hpp"
+#include "game_dynamic/moves.hpp"
+#include "UI/graphic.hpp"
 
-
-graphic output;
 
 int main()
 {

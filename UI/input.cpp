@@ -1,17 +1,19 @@
 #include "input.hpp"
 
-extern graphic output;
-extern bool quit;
-
 template<const tile player>
-void mouse_event(position &selected, byte &ammount, direction &move_direction, direction &row_direction, const pair<int> &cursorPosition, map &board)
+void mouse_event(position &selected, size_t &ammount, direction &move_direction, direction &row_direction, const pair<int> &cursorPosition, const map &board)
 {
     position cursorOnBoard;
 
-    cursorOnBoard.y = (cursorPosition.y - 300) / 100;
-    cursorOnBoard.x = (cursorPosition.x - ((900 - (9 - modulus(cursorOnBoard.y - 4)) * 100) / 2)) / 100;
+    cursorOnBoard.y = (cursorPosition.y - topSpace) / orbHeight;
+    cursorOnBoard.x = (cursorPosition.x - ((windowWidth - (layerCount - differenceToZero(cursorOnBoard.y - middleLayer)) * orbWidth) / 2)) / orbWidth;
+
+    std::cout << "cursor x: " << (int)cursorOnBoard.x << " y: " << (int)cursorOnBoard.y << "\n";
 
     if (!on_board(cursorOnBoard))
+        return;
+
+    if(ammount == 3)//needs to be changed to choose a new orb
         return;
 
     if(ammount == 1)//get direction to the second
@@ -25,7 +27,7 @@ void mouse_event(position &selected, byte &ammount, direction &move_direction, d
                     row_direction = i;
                     ammount++;
                 }
-                else if(board[cursorOnBoard] == empty)//only move to empty because 1 ball cannot push
+                else if(board[cursorOnBoard] == empty)//only move to empty because 1 orb cannot push
                 {
                     row_direction = i;
                     move_direction = i;
@@ -78,13 +80,13 @@ void mouse_event(position &selected, byte &ammount, direction &move_direction, d
 }
 
 template<const tile player>
-action get_move(position &selected, byte &ammount, direction &move_direction, direction &row_direction)
+action get_move(const position &first, size_t &ammount, direction &move_direction, direction &row_direction)
 {
     action retVal;
 
     retVal.player         = player        ;
-    retVal._position      = selected      ;
-    retVal.ballC          = ammount       ;
+    retVal._position      = first         ;
+    retVal.orbC          = ammount       ;
     retVal.row_direction  = row_direction ;
     retVal.move_direction = move_direction;
 
@@ -96,41 +98,32 @@ action get_move(position &selected, byte &ammount, direction &move_direction, di
 }
 
 template<const tile player>
-bool handle_input(map &board)
+bool handle_input(const map &board, bool &running, position &first, size_t &ammount, direction &row_direction)
 {
-    position  selected            ; 
-    byte      ammount       = 0   ;
     direction moveDirection = null;
-    direction rowDirection  = null;
     pair<int> mousePosition;
-
     SDL_Event e;
 
-    while (true)
+    while(!SDL_PollEvent( &e ))
     {
-        while(!SDL_PollEvent( &e ))
+        switch (e.type)
         {
-            switch (e.type)
+        case SDL_MOUSEBUTTONDOWN:
+            SDL_GetMouseState( &mousePosition.x, &mousePosition.y);
+            mouse_event_getinfo_call
+            mouse_event<player>(first, ammount, moveDirection, row_direction, mousePosition, board);
+            if(moveDirection != null)
             {
-            case SDL_MOUSEBUTTONDOWN:
-                SDL_GetMouseState( &mousePosition.x, &mousePosition.y);
-                mouse_event_getinfo_call
-                mouse_event<player>(selected, ammount, moveDirection, rowDirection, mousePosition, board);
+                movement_call
+                return move(get_move<player>(first, ammount, moveDirection, row_direction));
+            }  
+            break;
 
-                render_call
-                output.new_frame(selected, ammount, rowDirection, board);
-
-                if(moveDirection != null)
-                {
-                    movement_call
-                    return move(get_move<player>(selected, ammount, moveDirection, rowDirection), board);
-                }
-                    
-                break;
-            case SDL_QUIT:
-                quit = true;
-                return true;
-            }
+        case SDL_QUIT:
+            running = false;
+            return true;
         }
     }
+
+    return false;
 }

@@ -1,22 +1,14 @@
-#define DefBallIMG "../IO/img/ball.png"
-#define DefBoardImg "../IO/img/board.png"
+#include "../UI/UI.hpp"
+#include "../game_dynamic/board.hpp"
+#include "../global_info.hpp"
+#include <SDL2/SDL.h>
 
-#include "../datatypes.hpp"
-#include "../game dynamic/moves.hpp"
-#include "../IO/graphic.hpp"
-#include "../IO/graphic.cpp"
-
-graphic output;
+extern map board;
 
 int main()
 {
-    SDL_Init(SDL_INIT_EVENTS);
-
-
-    output.new_frame(position{.x = -10, .y = -10}, 0, null);
-
-    bool b;
-    std::cin >> b;
-
-    SDL_Quit();
+    row selected;
+    bool running;
+    SDL_Init(SDL_INIT_VIDEO || SDL_INIT_TIMER);
+    run_output(board, running, selected);
 }
