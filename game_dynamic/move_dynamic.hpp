@@ -1,6 +1,6 @@
 #pragma once
 #include "../datatypes.hpp"
-#include "board.hpp"
+#include "game.hpp"
 
 enum direction
 {

@@ -3,9 +3,8 @@
 #include <SDL2/SDL_image.h>
 #include <iostream>
 #include <vector>
-#include "../game_dynamic/board.hpp"
+#include "../game_dynamic/game.hpp"
 #include "../game_dynamic/move_dynamic.hpp"
-#include "../bugtracker.hpp"
 #include "config.h"
 #include "row.h"
 
@@ -34,7 +33,7 @@ private:
     split_texture orb;
 public:
 
-    void new_frame(const row &selected, const map &board);
+    void new_frame(const row &selected, const game &game_info);
 
     graphic();
     ~graphic();

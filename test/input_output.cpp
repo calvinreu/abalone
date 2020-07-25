@@ -1,11 +1,8 @@
-#include "../bugtracker.hpp"
-
 #include "../UI/UI.hpp"
-#include "../global_info.hpp"
 
 int main()
 {
-    bool running = true;
-    start_UI(board, running);
+    game game_info;
+    start_UI(game_info);
     SDL_Quit();
 }

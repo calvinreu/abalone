@@ -4,11 +4,8 @@
 #define DeforbIMG "./UI/img/orb.png"
 #endif
 #ifndef DefBoardIMG
-#define DefBoardIMG "./UI/img/board.png"
+#define DefBoardIMG "./UI/img/game_info.png"
 #endif
-
-extern int lostorbCPlayer0;
-extern int lostorbCPlayer1;
 
 graphic::graphic()
 {
@@ -60,30 +57,27 @@ graphic::~graphic()
     IMG_Quit();
 }
 
-void graphic::new_frame(const row &selected, const map &board)
+void graphic::new_frame(const row &selected, const game &game_info)
 {
     SDL_RenderClear(renderer);
 
     size_t layerLenght;
     size_t layer = 0;
-    SDL_Rect destRect = {.x = (layerCount-lostorbCPlayer0) * orbWidth/2, .y = emptySpace, .w = orbWidth, .h = orbHeight};
+    SDL_Rect destRect = {.x = (layerCount-game_info.pointsLostPlayer0) * orbWidth/2, .y = emptySpace, .w = orbWidth, .h = orbHeight};
 
 
-    for (size_t i = 0; i < lostorbCPlayer0; i++)
+    for (size_t i = 0; i < game_info.pointsLostPlayer0; i++)
     {
         orb.RenderCopy(&black_orb, &destRect, renderer);
         destRect.x += orbWidth;
     }
     
-    destRect.y = topSpace;//everything above the board
+    destRect.y = topSpace;//everything above the game_info
 
-    for (auto i = board.begin(); i < board.end(); i++)
+    for (auto i = game_info.begin(); i < game_info.end(); i++)
     {
         layerLenght = layerCount - differenceToZero<int>(layer - 4);
         destRect.x = (layerCount-layerLenght)*orbWidth/2;
-
-        //std::cout << layerLenght << "\n";
-        //std::cout << differenceToZero<int>(layer - 4) << "\n";
 
         for (auto i1 = *i; i1 < *i + layerLenght; i1++)
         {
@@ -99,9 +93,9 @@ void graphic::new_frame(const row &selected, const map &board)
         layer++;
     }
 
-    destRect.x = (layerCount-lostorbCPlayer1) * orbWidth/2;
+    destRect.x = (layerCount-game_info.pointsLostPlayer1) * orbWidth/2;
 
-    for (size_t i = 0; i < lostorbCPlayer1; i++)
+    for (size_t i = 0; i < game_info.pointsLostPlayer1; i++)
     {
         orb.RenderCopy(&white_orb, &destRect, renderer);
         destRect.x += orbWidth;
@@ -111,12 +105,10 @@ void graphic::new_frame(const row &selected, const map &board)
 
     for (size_t i = 0; i < selected.ammount; i++)
     {
-        destRect.x = (layerCount - differenceToZero(tempTile.y - middleLayer))*orbWidth/2 + (tempTile.x * orbWidth);
+        destRect.x = (differenceToZero(tempTile.y - middleLayer))*orbWidth/2 + (tempTile.x * orbWidth);
         destRect.y = topSpace + (tempTile.y * orbHeight);
         orb.RenderCopy(&selected_orb, &destRect, renderer);
         set_field_index(tempTile, selected.row_direction, 1);
-
-        std::cout << "destRect x: " << destRect.x << "destRect y: " << destRect.y << "\n";
     }
 
     SDL_RenderPresent(renderer);
