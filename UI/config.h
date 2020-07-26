@@ -8,6 +8,7 @@ const int emptySpace = 50;
 const Uint32 Delay_timeDelay = 3;//delay when launching SDL_Delay
 const Uint32 FPS = 10;
 const Uint32 frameTime = (1000 / FPS) - Delay_timeDelay;
+const Uint32 inputDelayTime = 300;
 
 
 const int topSpace = (2*emptySpace)+orbHeight;
