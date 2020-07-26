@@ -22,15 +22,26 @@ void mouse_event(position &selected, size_t &ammount, direction &move_direction,
                     row_direction = i;
                     ammount++;
                 }
-                else if(game_info[cursorOnBoard] == empty)//only move to empty because 1 orb cannot push
+                else if(game_info[cursorOnBoard] == empty)//only move one orb to empty field
                 {
                     row_direction = i;
                     move_direction = i;
+                }
+                else
+                {
+                    row_direction = null;
+                    ammount = 0;
+                    move_direction = null;
                 }
                 
                 return;
             }
         }
+
+        row_direction = null;
+        ammount = 0;
+        move_direction = null;
+
     }
     else if(row_direction != null)
     {
@@ -43,7 +54,7 @@ void mouse_event(position &selected, size_t &ammount, direction &move_direction,
 
             return;
         }
-        else if(get_field_index(selected, row_direction, -1) == cursorOnBoard)//backward move
+        else if(get_field_index(selected, opposite_direction(row_direction), 1) == cursorOnBoard)//backward move
         {
             if(game_info[cursorOnBoard] == player)
             {
@@ -59,9 +70,16 @@ void mouse_event(position &selected, size_t &ammount, direction &move_direction,
 
             return;
         }
+        else if(false)
+        {
+            //TODO add side movement
+        }
         else
         {
-            
+            row_direction  = null;
+            move_direction = null;
+            ammount = 0;
+
             return;
         }
     }
@@ -109,7 +127,8 @@ bool handle_input(game &game_info, position &first, size_t &ammount, direction &
             if(moveDirection != null)
             {
                 return move(game_info, get_move<player>(first, ammount, moveDirection, row_direction));
-            }  
+            }
+            SDL_Delay(frameTime*2);
             break;
 
         case SDL_QUIT:
