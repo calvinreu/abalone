@@ -70,12 +70,17 @@ void mouse_event(position &selected, size_t &ammount, direction &move_direction,
 
             return;
         }
-        else if(false)
-        {
-            //TODO add side movement
-        }
         else
         {
+
+            for (auto i = right; i < null; i = (direction)(i + 1))
+                if (get_field_index(selected, i, 1) == cursorOnBoard)
+                {
+                    move_direction = i;
+                    return;
+                }
+            
+
             row_direction  = null;
             move_direction = null;
             ammount = 0;
@@ -88,7 +93,8 @@ void mouse_event(position &selected, size_t &ammount, direction &move_direction,
     {
         selected = cursorOnBoard;
         ammount = 1;   
-        row_direction = null;     
+        row_direction = null;
+        move_direction = null;
     }
 }
 
@@ -126,6 +132,7 @@ bool handle_input(game &game_info, position &first, size_t &ammount, direction &
             mouse_event<player>(first, ammount, moveDirection, row_direction, mousePosition, game_info);
             if(moveDirection != null)
             {
+                std::cout << moveDirection << "\n";
                 return move(game_info, get_move<player>(first, ammount, moveDirection, row_direction));
             }
             SDL_Delay(inputDelayTime);
