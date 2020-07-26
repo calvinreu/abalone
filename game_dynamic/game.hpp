@@ -24,7 +24,7 @@ class game
         tile** begin() { return board             ; }
         tile** end()   { return board + layerCount; }
         
-        bool running;
+        bool running = true;
         tile turn = player0;//which players turn it is
         size_t pointsLostPlayer0 = 0;
         size_t pointsLostPlayer1 = 0;
