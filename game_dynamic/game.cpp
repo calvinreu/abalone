@@ -1,4 +1,4 @@
-#include "board.hpp"
+#include "game.hpp"
 
 tile r0[5] = {player0, player0, player0, player0, player0};
 tile r1[6] = {player0, player0, player0, player0, player0, player0};
@@ -10,7 +10,7 @@ tile r6[7] = {empty, empty, player1, player1, player1, empty, empty};
 tile r7[6] = {player1, player1, player1, player1, player1, player1};
 tile r8[5] = {player1, player1, player1, player1, player1};
 
-map::map() : data{r0, r1, r2, r3, r4, r5, r6, r7, r8}{}
+game::game() : board{r0, r1, r2, r3, r4, r5, r6, r7, r8}{}
 
 bool on_board(const position &Tile)
 {

@@ -1,6 +1,6 @@
 #pragma once
 #include <datatypes.h>
-#include "../game_dynamic/board.hpp"
+#include "../game_dynamic/game.hpp"
 
 struct row
 {

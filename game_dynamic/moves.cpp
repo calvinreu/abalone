@@ -1,16 +1,13 @@
 #include "moves.hpp"
 
-extern map board;
-extern size_t lostorbCPlayer1;
-extern size_t lostorbCPlayer0;
 
-inline void straight_empty(const action &_move, const position &last_tile)
+inline void straight_empty(game &game_info, const action &_move, const position &last_tile)
 {
-    board[_move._position]  = empty;
-    board[last_tile] = _move.player;
+    game_info[_move._position]  = empty;
+    game_info[last_tile] = _move.player;
 }
 
-inline bool straight_full(const action &_move, const position &startEnemyRow)
+inline bool straight_full(game &game_info, const action &_move, const position &startEnemyRow)
 {
     size_t enemyC = 1;
     position currentTile = startEnemyRow;
@@ -18,29 +15,29 @@ inline bool straight_full(const action &_move, const position &startEnemyRow)
     {
         set_field_index(currentTile, _move.move_direction, 1);
 
-        if (board[currentTile] == empty)
+        if (game_info[currentTile] == empty)
         {
-            board[startEnemyRow] = _move.player;
-            board[_move._position] = empty;
+            game_info[startEnemyRow] = _move.player;
+            game_info[_move._position] = empty;
 
             if (_move.player == player0)
             {
                 if (on_board(currentTile))
-                    board[currentTile] = player1;
+                    game_info[currentTile] = player1;
                 else
-                    lostorbCPlayer1++;
+                    game_info.pointsLostPlayer1++;
             }
             else
             {
                 if (on_board(currentTile))
-                    board[currentTile] = player0;
+                    game_info[currentTile] = player0;
                 else
-                    lostorbCPlayer0++;
+                    game_info.pointsLostPlayer0++;
             }
 
             return true;
         }
-        else if (board[currentTile] == _move.player)
+        else if (game_info[currentTile] == _move.player)
         {
             return false;//cannot push own orbs
         }
@@ -53,7 +50,7 @@ inline bool straight_full(const action &_move, const position &startEnemyRow)
     }
 }
 
-bool move(const action &_move)
+bool move(game &game_info, const action &_move)
 {
 
     if(_move.orbC > 3)// over free orbs
@@ -69,18 +66,18 @@ bool move(const action &_move)
         if(!on_board(currentTile))
             return false;
 
-        if (board[currentTile] == empty)
+        if (game_info[currentTile] == empty)
         {
-            straight_empty(_move, currentTile);
+            straight_empty(game_info, _move, currentTile);
             return true;
         }
-        else if (board[currentTile] == _move.player)
+        else if (game_info[currentTile] == _move.player)
         {
             return false;//cannot push own orbs
         }
         else
         {
-            return straight_full(_move, currentTile);
+            return straight_full(game_info, _move, currentTile);
         }
     }
     /*else
@@ -88,13 +85,13 @@ bool move(const action &_move)
         
         set_field_index(currentTile, move_.move_direction, 1);
 
-        if(map[currentTile.y][currentTile.x] == empty)
+        if(game[currentTile.y][currentTile.x] == empty)
         {
             for (size_t i = 1; i < move_.orbC; i++)
             {
                 set_field_index(currentTile, move_.row_direction, 1);
 
-                if(map[currentTile.y][currentTile.x] != empty)
+                if(game[currentTile.y][currentTile.x] != empty)
                     return false;
             }
 
@@ -103,7 +100,7 @@ bool move(const action &_move)
             for (size_t i = 1; i < move_.orbC; i++)
             {
                 set_field_index(currentTile, move_.row_direction, 1);
-                map[currentTile.y][currentTile.x] = move_.player;
+                game[currentTile.y][currentTile.x] = move_.player;
             }     
         }
         else

@@ -1,6 +1,6 @@
 #pragma once
 #include <SDL2/SDL.h>
-#include "../game_dynamic/board.hpp"
+#include "../game_dynamic/game.hpp"
 
 const int orbWidth = 50;
 const int orbHeight = 50;

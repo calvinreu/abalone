@@ -1,19 +1,14 @@
 #include "input.hpp"
 
 template<const tile player>
-void mouse_event(position &selected, size_t &ammount, direction &move_direction, direction &row_direction, const pair<int> &cursorPosition, const map &board)
+void mouse_event(position &selected, size_t &ammount, direction &move_direction, direction &row_direction, const pair<int> &cursorPosition, const game &game_info)
 {
     position cursorOnBoard;
 
     cursorOnBoard.y = (cursorPosition.y - topSpace) / orbHeight;
     cursorOnBoard.x = (cursorPosition.x - ((windowWidth - (layerCount - differenceToZero(cursorOnBoard.y - middleLayer)) * orbWidth) / 2)) / orbWidth;
 
-    std::cout << "cursor x: " << (int)cursorOnBoard.x << " y: " << (int)cursorOnBoard.y << "\n";
-
     if (!on_board(cursorOnBoard))
-        return;
-
-    if(ammount == 3)//needs to be changed to choose a new orb
         return;
 
     if(ammount == 1)//get direction to the second
@@ -22,12 +17,12 @@ void mouse_event(position &selected, size_t &ammount, direction &move_direction,
         {
             if (get_field_index(selected, i, 1) == cursorOnBoard)
             {
-                if(board[cursorOnBoard] == player)
+                if(game_info[cursorOnBoard] == player)
                 {
                     row_direction = i;
                     ammount++;
                 }
-                else if(board[cursorOnBoard] == empty)//only move to empty because 1 orb cannot push
+                else if(game_info[cursorOnBoard] == empty)//only move to empty because 1 orb cannot push
                 {
                     row_direction = i;
                     move_direction = i;
@@ -41,7 +36,7 @@ void mouse_event(position &selected, size_t &ammount, direction &move_direction,
     {
         if(cursorOnBoard == get_field_index(selected, row_direction, ammount))//forward move
         {
-            if (board[cursorOnBoard] == player)
+            if (game_info[cursorOnBoard] == player && ammount < 3)
                 ammount++;
             else
                 move_direction = row_direction;
@@ -50,7 +45,7 @@ void mouse_event(position &selected, size_t &ammount, direction &move_direction,
         }
         else if(get_field_index(selected, row_direction, -1) == cursorOnBoard)//backward move
         {
-            if(board[cursorOnBoard] == player)
+            if(game_info[cursorOnBoard] == player)
             {
                 selected = cursorOnBoard;
                 ammount++;        
@@ -71,7 +66,7 @@ void mouse_event(position &selected, size_t &ammount, direction &move_direction,
         }
     }
 
-    if(board[cursorOnBoard] == player)
+    if(game_info[cursorOnBoard] == player)
     {
         selected = cursorOnBoard;
         ammount = 1;   
@@ -98,7 +93,7 @@ action get_move(const position &first, size_t &ammount, direction &move_directio
 }
 
 template<const tile player>
-bool handle_input(const map &board, bool &running, position &first, size_t &ammount, direction &row_direction)
+bool handle_input(game &game_info, position &first, size_t &ammount, direction &row_direction)
 {
     direction moveDirection = null;
     pair<int> mousePosition;
@@ -110,17 +105,15 @@ bool handle_input(const map &board, bool &running, position &first, size_t &ammo
         {
         case SDL_MOUSEBUTTONDOWN:
             SDL_GetMouseState( &mousePosition.x, &mousePosition.y);
-            mouse_event_getinfo_call
-            mouse_event<player>(first, ammount, moveDirection, row_direction, mousePosition, board);
+            mouse_event<player>(first, ammount, moveDirection, row_direction, mousePosition, game_info);
             if(moveDirection != null)
             {
-                movement_call
-                return move(get_move<player>(first, ammount, moveDirection, row_direction));
+                return move(game_info, get_move<player>(first, ammount, moveDirection, row_direction));
             }  
             break;
 
         case SDL_QUIT:
-            running = false;
+            game_info.running = false;
             return true;
         }
     }

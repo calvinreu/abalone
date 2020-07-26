@@ -2,67 +2,35 @@
 
 extern const Uint32 frameTime;
 
-void start_UI(map &board, bool &running)
+void start_UI(game &game_info)
 {
     SDL_Init(SDL_INIT_VIDEO || SDL_INIT_TIMER || SDL_INIT_EVENTS);
     row selected = {.ammount = 0, .row_direction = null};
 
-    std::thread tGraphic(run_output, std::ref(board), std::ref(selected), std::ref(running));
-    run_input(board, selected, running);
+    std::thread tGraphic(run_output, std::ref(game_info), std::ref(selected));
+    run_input(game_info, selected);
     tGraphic.join();
 }
 
-void run_UI(const map &board, bool &running)
+void run_input(game &game_info, row &selected)
 {
-    graphic renderer;
-    Uint32 startTime;
-    row selected = {.ammount = 0, .row_direction = null};
-    bool finished;
-
-    while (running)
+    while(game_info.running)
     {
-        finished = false;
-        while (!finished)
-        {
-            //startTime = SDL_GetTicks();
-            finished = handle_input<player0>(board, running, selected.first, selected.ammount, selected.row_direction);
-            //renderer.new_frame(selected, board);
-            //if( SDL_GetTicks()-startTime < frameTime )
-            //    SDL_Delay(frameTime - (SDL_GetTicks()-startTime));
-        }
-        finished = false;
-        while (!finished)
-        {
-            //startTime = SDL_GetTicks();
-            finished = handle_input<player1>(board, running, selected.first, selected.ammount, selected.row_direction);
-            //renderer.new_frame(selected, board);
-            //SDL_Delay(frameTime - (SDL_GetTicks()-startTime));
-        }
+        while(!handle_input<player0>(game_info, selected.first, selected.ammount, selected.row_direction));
+        while(!handle_input<player1>(game_info, selected.first, selected.ammount, selected.row_direction));
     }
 }
 
-void run_input(map &board, row &selected, bool &running)
-{
-    while(running)
-    {
-        while(!handle_input<player0>(board, running, selected.first, selected.ammount, selected.row_direction));
-        while(!handle_input<player1>(board, running, selected.first, selected.ammount, selected.row_direction));
-    }
-}
-
-void run_output(const map &board, const row &selected, const bool &running)
+void run_output(const game &game_info, const row &selected)
 {
     graphic output;
     Uint32 startTime;
     size_t i = 0;
 
-    while (running)
+    while (game_info.running)
     {
         startTime = SDL_GetTicks();
-        output.new_frame(selected, board);
-        std::cout << "x: " << (int)selected.first.x << " y: " << (int)selected.first.y << "\n";
-        std::cout << "selected.ammount: " << selected.ammount << "\n";
-        std::cout << "selected.direction: " << selected.row_direction << "\n";
+        output.new_frame(selected, game_info);
         SDL_Delay(frameTime - (SDL_GetTicks()-startTime));
     }
 }
