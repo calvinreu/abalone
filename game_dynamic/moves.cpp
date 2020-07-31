@@ -80,34 +80,44 @@ bool move(game &game_info, const action &_move)
             return straight_full(game_info, _move, currentTile);
         }
     }
-    /*else
+    else
     {
-        
-        set_field_index(currentTile, move_.move_direction, 1);
+        set_field_index(currentTile, _move.move_direction, 1);
 
-        if(game[currentTile.y][currentTile.x] == empty)
+        if(game_info[currentTile] == empty)
         {
-            for (size_t i = 1; i < move_.orbC; i++)
+            for (size_t i = 1; i < _move.orbC; i++)//check if the places for the new orbs are empty
             {
-                set_field_index(currentTile, move_.row_direction, 1);
+                set_field_index(currentTile, _move.row_direction, 1);
 
-                if(game[currentTile.y][currentTile.x] != empty)
+                if(game_info[currentTile] != empty)
                     return false;
             }
 
-            currentTile = {move_.xpos, move_.ypos};
-            set_field_index(currentTile, move_.move_direction, 1);
-            for (size_t i = 1; i < move_.orbC; i++)
+            currentTile = _move._position;//put orbs on their new position
+            set_field_index(currentTile, _move.move_direction, 1);
+            game_info[currentTile] = _move.player;
+            for (size_t i = 1; i < _move.orbC; i++)
             {
-                set_field_index(currentTile, move_.row_direction, 1);
-                game[currentTile.y][currentTile.x] = move_.player;
-            }     
+                set_field_index(currentTile, _move.row_direction, 1);
+                game_info[currentTile] = _move.player;
+            }
+
+            currentTile = _move._position;//delete the old orbs
+            game_info[currentTile] = empty;
+            for (size_t i = 0; i < _move.orbC; i++)
+            {
+                set_field_index(currentTile, _move.row_direction, 1);
+                game_info[currentTile] = empty;
+            }
+
+            return true; 
         }
         else
         {
             return false;
         } 
-    }*/
+    }
 
     std::cout << "movement error" << std::endl;
     return false; 

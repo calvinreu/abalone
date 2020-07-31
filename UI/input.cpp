@@ -132,7 +132,6 @@ bool handle_input(game &game_info, position &first, size_t &ammount, direction &
             mouse_event<player>(first, ammount, moveDirection, row_direction, mousePosition, game_info);
             if(moveDirection != null)
             {
-                std::cout << moveDirection << "\n";
                 return move(game_info, get_move<player>(first, ammount, moveDirection, row_direction));
             }
             SDL_Delay(inputDelayTime);
