@@ -15,25 +15,30 @@ inline bool straight_full(game &game_info, const action &_move, const position &
     {
         set_field_index(currentTile, _move.move_direction, 1);
 
+        if (!on_board(currentTile))
+        {
+            game_info[startEnemyRow] = _move.player;
+            game_info[_move._position] = empty;
+
+            if (_move.player == player0)
+                game_info.pointsLostPlayer1++;
+            else
+                game_info.pointsLostPlayer0++;
+
+            return true;
+
+        }
+
+
         if (game_info[currentTile] == empty)
         {
             game_info[startEnemyRow] = _move.player;
             game_info[_move._position] = empty;
 
             if (_move.player == player0)
-            {
-                if (on_board(currentTile))
-                    game_info[currentTile] = player1;
-                else
-                    game_info.pointsLostPlayer1++;
-            }
-            else
-            {
-                if (on_board(currentTile))
-                    game_info[currentTile] = player0;
-                else
-                    game_info.pointsLostPlayer0++;
-            }
+                game_info[currentTile] = player1;
+            else    
+                game_info[currentTile] = player0;
 
             return true;
         }
@@ -64,7 +69,10 @@ bool move(game &game_info, const action &_move)
         set_field_index(currentTile, _move.move_direction, _move.orbC);
 
         if(!on_board(currentTile))
+        {
+            std::cout << "not on board \n";
             return false;
+        }
 
         if (game_info[currentTile] == empty)
         {
