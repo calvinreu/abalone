@@ -3,6 +3,10 @@ CC = g++ -c -g -fpic
 all:
 	make UI
 	make game_dynamic
+	make main_file
+
+main_file: abalone.cpp build/graphic.o build/input.o build/UI.o build/game.o build/functions.o build/move_dynamic.o build/moves.o
+	g++ abalone.cpp -lSDL2 -lSDL2_image -lpthread build/graphic.o build/input.o build/UI.o build/game.o build/functions.o build/move_dynamic.o build/moves.o -o ./abalone.out
 
 UI: UI/config.h UI/graphic.cpp UI/graphic.hpp UI/input.cpp UI/input.hpp UI/input-template.cpp UI/UI.cpp UI/UI.hpp
 	$(CC) UI/graphic.cpp        -o build/graphic.o
