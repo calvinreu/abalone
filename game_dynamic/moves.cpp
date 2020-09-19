@@ -1,5 +1,7 @@
 #include "moves.hpp"
 
+extern const size_t maxOrbsLost;
+
 
 inline void straight_empty(game &game_info, const action &_move, const position &last_tile)
 {
@@ -20,10 +22,16 @@ inline bool straight_full(game &game_info, const action &_move, const position &
             game_info[startEnemyRow] = _move.player;
             game_info[_move._position] = empty;
 
-            if (_move.player == player0)
+            if (_move.player == player0){
                 game_info.pointsLostPlayer1++;
+                if (game_info.pointsLostPlayer1 > maxOrbsLost)
+                    game_info.running = false;
+            }
             else
+            {
                 game_info.pointsLostPlayer0++;
+                game_info.running = false;
+            }
 
             return true;
 

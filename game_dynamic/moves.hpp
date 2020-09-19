@@ -3,6 +3,7 @@
 #include "move_dynamic.hpp"
 #include "functions.hpp"
 #include "game.hpp"
+#include "config.h"
 #include <iostream>
 
 
