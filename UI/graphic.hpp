@@ -8,8 +8,8 @@
 #include "config.h"
 #include "row.h"
 
-#define DeforbIMG "../UI/img/orb.png"
-#define DefBoardImg "../UI/img/board.png"
+#define DeforbIMG "./UI/img/orb.png"
+#define DefBoardIMG "./UI/img/board.png"
 
 class split_texture
 {
