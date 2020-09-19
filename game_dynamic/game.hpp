@@ -1,6 +1,7 @@
 #pragma once
 #include "../datatypes.hpp"
 #include "functions.hpp"
+#include "config.h"
 
 const int layerCount = 9;
 const int middleLayer = (layerCount-1)/2;
