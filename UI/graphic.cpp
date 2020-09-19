@@ -93,6 +93,9 @@ void graphic::new_frame(const row &selected, const game &game_info)
         layer++;
     }
 
+    destRect.y += orbHeight;
+
+
     destRect.x = (layerCount-game_info.pointsLostPlayer1) * orbWidth/2;
 
     for (size_t i = 0; i < game_info.pointsLostPlayer1; i++)
